@@ -111,7 +111,7 @@
             </div>
         </div>
         <audio id="focusAudio" loop>
-            <source src="/audio.mp3" type="audio/mpeg">
+            <source type="audio/mpeg" id="audioSource">
             Your browser does not support the audio element.
         </audio>
     </div>
@@ -119,6 +119,9 @@
         // Audio Control
         const audioElement = document.getElementById('focusAudio');
         const audioToggleButton = document.getElementById('audioToggle');
+        const audioSource = `${window.location.href}/audio.mp3`;
+        const audioSourceElement = document.getElementById('audioSource');
+        audioSourceElement.src = audioSource;
 
         audioToggleButton.addEventListener('click', () => {
             if (audioElement.paused) {
