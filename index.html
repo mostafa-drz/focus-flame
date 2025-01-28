@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A focus-enhancing page designed to improve attention and mindfulness through visual and auditory elements inspired by flame colors.">
+    <meta name="keywords" content="focus, mindfulness, attention, flame-inspired design, Tibetan bowl sound">
+    <meta name="author" content="Mostafa Darehzereshki">
+    <title>Focus Flame</title>
+    <style>
+        /* General Reset */
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            background: #0d0d0d; /* Dark background for contrast */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            flex-direction: column;
+            width: 100%;
+        }
+
+        /* Abstract Flame-Inspired Circle */
+        .circle-container {
+            position: relative;
+            width: 50vw;
+            height: 50vw;
+            max-width: 200px;
+            max-height: 200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .circle {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: radial-gradient(circle, #ff9a3b, #ff5700, #7a2000);
+            box-shadow: 0 0 30px 10px rgba(255, 90, 0, 0.7);
+            animation: pulse 2.5s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 0 30px 10px rgba(255, 90, 0, 0.7);
+            }
+            50% {
+                transform: scale(1.2);
+                box-shadow: 0 0 50px 20px rgba(255, 140, 0, 0.9);
+            }
+        }
+
+        /* Message and Button */
+        .message {
+            margin-top: 20px;
+            text-align: center;
+            color: #f3f3f3;
+            font-size: 1.2rem;
+            margin-top: 5rem;
+        }
+        .message p {
+            animation: fadeIn 2s ease-in-out;
+            margin: 0.5rem 0;
+        }
+
+        .controls {
+            margin-top: 10px;
+        }
+
+        .button {
+            background-color: #ff5700;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+            margin-top: 2rem;
+        }
+
+        .button:hover {
+            background-color: #ff8a00;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="circle-container">
+        <div class="circle"></div>
+    </div>
+    <div id="content">
+        <div class="message" id="focusMessage">
+            <p>Take a moment to focus on the shape.</p>
+            <p>If your attention drifts, that's okay—just gently bring it back :)</p>
+            <div class="controls">
+                <button class="button" id="audioToggle">Play Audio</button>
+            </div>
+        </div>
+        <audio id="focusAudio" loop>
+            <source src="/audio.mp3" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+    </div>
+    <script>
+        // Audio Control
+        const audioElement = document.getElementById('focusAudio');
+        const audioToggleButton = document.getElementById('audioToggle');
+
+        audioToggleButton.addEventListener('click', () => {
+            if (audioElement.paused) {
+                audioElement.play();
+                audioToggleButton.textContent = 'Pause Audio';
+            } else {
+                audioElement.pause();
+                audioToggleButton.textContent = 'Play Audio';
+            }
+        });
+
+        // Disappear Message
+        const focusMessage = document.getElementById('content');
+        const timeout = 10000; // 10 seconds
+
+        let opacity = 1;
+        const fadeInterval = 100; // Interval in milliseconds
+        const fadeStep = fadeInterval / timeout;
+
+        const fadeOut = setInterval(() => {
+            opacity -= fadeStep;
+            if (opacity <= 0) {
+                clearInterval(fadeOut);
+                focusMessage.style.display = 'none';
+            } else {
+                focusMessage.style.opacity = opacity;
+            }
+        }, fadeInterval);
+    </script>
+</body>
+</html>
