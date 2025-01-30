@@ -14,7 +14,7 @@
             padding: 0;
             height: 100%;
             overflow: hidden;
-            background: #0d0d0d; /* Dark background for contrast */
+            background: #0d0d0d;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -41,7 +41,7 @@
             border-radius: 50%;
             background: radial-gradient(circle, #ff9a3b, #ff5700, #7a2000);
             box-shadow: 0 0 30px 10px rgba(255, 90, 0, 0.7);
-            animation: pulse 9s infinite ease-in-out;
+            animation: pulse 2.5s infinite ease-in-out;
         }
 
         @keyframes pulse {
@@ -70,6 +70,10 @@
 
         .controls {
             margin-top: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
         }
 
         .button {
@@ -81,11 +85,38 @@
             cursor: pointer;
             font-size: 1rem;
             transition: background-color 0.3s ease;
-            margin-top: 2rem;
+            margin-top: 1rem;
         }
 
         .button:hover {
             background-color: #ff8a00;
+        }
+
+        .timer-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #f3f3f3;
+            font-size: 1rem;
+        }
+
+        .timer-container input {
+            width: 50px;
+            padding: 5px;
+            font-size: 1rem;
+            text-align: center;
+            border: 1px solid #ff5700;
+            background: #222;
+            color: #fff;
+            border-radius: 5px;
+        }
+
+        .audio-toggle {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: #f3f3f3;
+            font-size: 1rem;
         }
 
         @keyframes fadeIn {
@@ -96,60 +127,96 @@
                 opacity: 1;
             }
         }
+
+        /* Final message when timer ends */
+        .final-message {
+            display: none;
+            color: #f3f3f3;
+            font-size: 1.5rem;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
-    <div class="circle-container">
-        <div class="circle"></div>
+    <div class="circle-container" id="circleContainer">
+        <div class="circle" id="circle"></div>
     </div>
+
     <div id="content">
         <div class="message" id="focusMessage">
             <p>Take a moment to focus on the shape.</p>
             <p>If your attention drifts, that's okay—just gently bring it back :)</p>
             <div class="controls">
-                <button class="button" id="audioToggle">Play Audio</button>
+                <!-- Timer Input -->
+                <div class="timer-container">
+                    <label for="focusTime">Set Timer:</label>
+                    <input type="number" id="focusTime" min="1" value="3"> min
+                </div>
+                <!-- Audio Toggle -->
+                <div class="audio-toggle">
+                    <input type="checkbox" id="audioToggle">
+                    <label for="audioToggle">Play Audio</label>
+                </div>
+                <button class="button" id="startFocus">Start</button>
             </div>
         </div>
-        <audio id="focusAudio" loop>
-            <source type="audio/mpeg" id="audioSource">
-            Your browser does not support the audio element.
-        </audio>
     </div>
-    <script>
-        // Audio Control
-        const audioElement = document.getElementById('focusAudio');
-        const audioToggleButton = document.getElementById('audioToggle');
-        const audioSource = `${window.location.href}/audio.mp3`;
-        const audioSourceElement = document.getElementById('audioSource');
-        audioSourceElement.src = audioSource;
 
-        audioToggleButton.addEventListener('click', () => {
-            if (audioElement.paused) {
+    <!-- Final Message -->
+    <div class="final-message" id="finalMessage">
+        <p>Have a good day!</p>
+        <p>Keep breathing and pay attention to the present moment :)</p>
+    </div>
+
+    <!-- Audio Element -->
+    <audio id="focusAudio" loop>
+        <source src="audio.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <script>
+        let timer;
+        const circle = document.getElementById("circle");
+        const focusTimeInput = document.getElementById("focusTime");
+        const startFocusButton = document.getElementById("startFocus");
+        const circleContainer = document.getElementById("circleContainer");
+        const focusMessage = document.getElementById("focusMessage");
+        const finalMessage = document.getElementById("finalMessage");
+        const audioElement = document.getElementById("focusAudio");
+        const audioToggle = document.getElementById("audioToggle");
+
+        startFocusButton.addEventListener("click", () => {
+            let focusTime = parseInt(focusTimeInput.value) || 3;
+            let focusTimeMs = focusTime * 60 * 1000; // Convert to milliseconds
+
+            // Reset visibility
+            circleContainer.style.display = "flex";
+            focusMessage.style.display = "block";
+            finalMessage.style.display = "none";
+            circle.style.animation = "pulse 2.5s infinite ease-in-out";
+
+            // Play audio if selected
+            if (audioToggle.checked) {
                 audioElement.play();
-                audioToggleButton.textContent = 'Pause Audio';
-            } else {
-                audioElement.pause();
-                audioToggleButton.textContent = 'Play Audio';
             }
+
+            // Clear any previous timer
+            clearTimeout(timer);    
+
+            focusMessage.style.display = "none"; // Hide the initial message
+
+            // Start the countdown
+            timer = setTimeout(() => {
+                stopFocusSession();
+            }, focusTimeMs);
         });
 
-        // Disappear Message
-        const focusMessage = document.getElementById('content');
-        const timeout = 10000; // 10 seconds
-
-        let opacity = 1;
-        const fadeInterval = 100; // Interval in milliseconds
-        const fadeStep = fadeInterval / timeout;
-
-        const fadeOut = setInterval(() => {
-            opacity -= fadeStep;
-            if (opacity <= 0) {
-                clearInterval(fadeOut);
-                focusMessage.style.display = 'none';
-            } else {
-                focusMessage.style.opacity = opacity;
-            }
-        }, fadeInterval);
+        function stopFocusSession() {
+            circle.style.animation = "none"; // Stop the animation
+            circleContainer.style.display = "none"; // Hide the circle
+            finalMessage.style.display = "block"; // Show the final message
+            audioElement.pause(); // Stop audio
+        }
     </script>
 </body>
 </html>
