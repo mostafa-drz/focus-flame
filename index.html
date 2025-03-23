@@ -41,17 +41,17 @@
             border-radius: 50%;
             background: radial-gradient(circle, #ff9a3b, #ff5700, #7a2000);
             box-shadow: 0 0 30px 10px rgba(255, 90, 0, 0.7);
-            animation: pulse 2.5s infinite ease-in-out;
+            animation: pulse 12s infinite ease-in-out;
         }
 
         @keyframes pulse {
             0%, 100% {
                 transform: scale(1);
-                box-shadow: 0 0 30px 10px rgba(255, 90, 0, 0.7);
+                box-shadow: 0 0 20px 6px rgba(255, 90, 0, 0.7);
             }
             50% {
-                transform: scale(1.2);
-                box-shadow: 0 0 50px 20px rgba(255, 140, 0, 0.9);
+                transform: scale(1.15);
+                box-shadow: 0 0 40px 16px rgba(255, 140, 0, 0.9);
             }
         }
 
@@ -193,7 +193,7 @@
             circleContainer.style.display = "flex";
             focusMessage.style.display = "block";
             finalMessage.style.display = "none";
-            circle.style.animation = "pulse 2.5s infinite ease-in-out";
+            circle.style.animation = "pulse 12s infinite ease-in-out";
 
             // Play audio if selected
             if (audioToggle.checked) {
